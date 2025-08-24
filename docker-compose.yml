@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: ai-knowledge-hub-app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - .:/app
+    command: npm run start
+
+  # Optional: Mock backend API
+  mock-api:
+    image: json-server
+    container_name: ai-mock-api
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./mock-data:/data
+    command: json-server --watch /data/db.json --port 4000
+
+  # Optional: Local vector DB
+  vector-db:
+    image: milvusdb/milvus:v2.2.11
+    container_name: ai-vector-db
+    ports:
+      - "19530:19530"
+      - "19121:19121"
